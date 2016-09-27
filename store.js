@@ -7,29 +7,29 @@ function statement(customer, movies) {
     }
 
     function getAmount(rental) {
-        let thisAmount = 0;
-
         let movie = getMovie(rental);
+
+        let amount = 0;
 
         // determine amount for each movie
         switch (movie.code) {
             case "regular":
-                thisAmount = 2;
+                amount = 2;
                 if (rental.days > 2) {
-                    thisAmount += (rental.days - 2) * 1.5;
+                    amount += (rental.days - 2) * 1.5;
                 }
                 break;
             case "new":
-                thisAmount = rental.days * 3;
+                amount = rental.days * 3;
                 break;
             case "childrens":
-                thisAmount = 1.5;
+                amount = 1.5;
                 if (rental.days > 3) {
-                    thisAmount += (rental.days - 3) * 1.5;
+                    amount += (rental.days - 3) * 1.5;
                 }
                 break;
         }
-        return thisAmount;
+        return amount;
     }
 
     function getMovieBonusPoints(rental) {
