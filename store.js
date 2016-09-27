@@ -9,7 +9,7 @@ function statement(customer, movies) {
         return movies[rental.movieID];
     }
 
-    function getMovieAmount() {
+    function getMovieAmount(rental, movie) {
         let thisAmount = 0;
 
         // determine amount for each movie
@@ -35,7 +35,7 @@ function statement(customer, movies) {
 
     for (let rental of customer.rentals) {
         let movie = getMovie(rental);
-        var thisAmount = getMovieAmount();
+        var amount = getMovieAmount(rental, movie);
 
         //add frequent renter points
         totalBonusPoints++;
@@ -43,8 +43,8 @@ function statement(customer, movies) {
         if (movie.code === "new" && rental.days > 2) totalBonusPoints++;
 
         //print figures for this rental
-        result += `\t${movie.title}\t${thisAmount}\n`;
-        totalAmount += thisAmount;
+        result += `\t${movie.title}\t${amount}\n`;
+        totalAmount += amount;
     }
     // add footer lines
     result += `Amount owed is ${totalAmount}\n`;
