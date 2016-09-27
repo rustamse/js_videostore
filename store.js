@@ -38,6 +38,29 @@ function statement(customer, movies) {
             return 1;
     }
 
+    function getTotalAmount() {
+        let totalAmount = 0;
+        for (let rental of customer.rentals) {
+            let movie = getMovie(rental);
+            var amount = getMovieAmount(rental, movie);
+
+            totalAmount += amount;
+        }
+        return totalAmount;
+    }
+
+    function getTotalBonusPoints() {
+        let totalBonusPoints = 0;
+        for (let rental of customer.rentals) {
+            let movie = getMovie(rental);
+            var amount = getMovieAmount(rental, movie);
+
+            //add frequent renter points
+            totalBonusPoints += getMovieBonusPoints(rental, movie);
+        }
+        return totalBonusPoints;
+    }
+
     let result = `Rental Record for ${customer.name}\n`;
 
     for (let rental of customer.rentals) {
@@ -47,24 +70,11 @@ function statement(customer, movies) {
         result += `\t${movie.title}\t${amount}\n`;
     }
 
-    let totalAmount = 0;
-    for (let rental of customer.rentals) {
-        let movie = getMovie(rental);
-        var amount = getMovieAmount(rental, movie);
-
-        totalAmount += amount;
-    }
+    var totalAmount = getTotalAmount();
     // add footer lines
     result += `Amount owed is ${totalAmount}\n`;
 
-    let totalBonusPoints = 0;
-    for (let rental of customer.rentals) {
-        let movie = getMovie(rental);
-        var amount = getMovieAmount(rental, movie);
-
-        //add frequent renter points
-        totalBonusPoints += getMovieBonusPoints(rental, movie);
-    }
+    var totalBonusPoints = getTotalBonusPoints();
     result += `You earned ${totalBonusPoints} frequent renter points\n`;
 
     return result;
