@@ -32,8 +32,9 @@ function statement(customer, movies) {
         return thisAmount;
     }
 
-    function getMovieBonusPoints(rental, movie) {
-        // add bonus for a two day new release rental
+    function getMovieBonusPoints(rental) {
+        let movie = getMovie(rental);
+
         if (movie.code === "new" && rental.days > 2)
             return 2;
         else
@@ -43,9 +44,7 @@ function statement(customer, movies) {
     function getTotalAmount() {
         let totalAmount = 0;
         for (let rental of customer.rentals) {
-            var amount = getAmount(rental);
-
-            totalAmount += amount;
+            totalAmount += getAmount(rental);
         }
         return totalAmount;
     }
@@ -53,10 +52,7 @@ function statement(customer, movies) {
     function getTotalBonusPoints() {
         let totalBonusPoints = 0;
         for (let rental of customer.rentals) {
-            let movie = getMovie(rental);
-
-            //add frequent renter points
-            totalBonusPoints += getMovieBonusPoints(rental, movie);
+            totalBonusPoints += getMovieBonusPoints(rental);
         }
         return totalBonusPoints;
     }
@@ -71,7 +67,6 @@ function statement(customer, movies) {
     }
 
     var totalAmount = getTotalAmount();
-    // add footer lines
     result += `Amount owed is ${totalAmount}\n`;
 
     var totalBonusPoints = getTotalBonusPoints();
