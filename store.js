@@ -6,8 +6,10 @@ function statement(customer, movies) {
         return movies[rental.movieID];
     }
 
-    function getMovieAmount(rental, movie) {
+    function getAmount(rental) {
         let thisAmount = 0;
+
+        let movie = getMovie(rental);
 
         // determine amount for each movie
         switch (movie.code) {
@@ -41,8 +43,7 @@ function statement(customer, movies) {
     function getTotalAmount() {
         let totalAmount = 0;
         for (let rental of customer.rentals) {
-            let movie = getMovie(rental);
-            var amount = getMovieAmount(rental, movie);
+            var amount = getAmount(rental);
 
             totalAmount += amount;
         }
@@ -53,7 +54,6 @@ function statement(customer, movies) {
         let totalBonusPoints = 0;
         for (let rental of customer.rentals) {
             let movie = getMovie(rental);
-            var amount = getMovieAmount(rental, movie);
 
             //add frequent renter points
             totalBonusPoints += getMovieBonusPoints(rental, movie);
@@ -65,7 +65,7 @@ function statement(customer, movies) {
 
     for (let rental of customer.rentals) {
         let movie = getMovie(rental);
-        var amount = getMovieAmount(rental, movie);
+        var amount = getAmount(rental);
 
         result += `\t${movie.title}\t${amount}\n`;
     }
