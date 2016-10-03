@@ -12,6 +12,22 @@ class Customer {
     get rentals() {
         return this._info.rentals.map(r => new Rental(r));
     }
+
+    getTotalAmount(movies) {
+        var totalAmount = 0;
+        for (var rental of this.rentals) {
+            totalAmount += rental.getAmount(movies);
+        }
+        return totalAmount;
+    }
+
+    getTotalBonusPoints(movies) {
+        var totalBonusPoints = 0;
+        for (var rental of this.rentals) {
+            totalBonusPoints += rental.getMovieBonusPoints(movies);
+        }
+        return totalBonusPoints;
+    }
 }
 
 class Rental {
@@ -70,22 +86,6 @@ class Rental {
 
 function statement(customerInfo, movies) {
 
-    function getTotalAmount() {
-        let totalAmount = 0;
-        for (let rental of customer.rentals) {
-            totalAmount += rental.getAmount(movies);
-        }
-        return totalAmount;
-    }
-
-    function getTotalBonusPoints() {
-        let totalBonusPoints = 0;
-        for (let rental of customer.rentals) {
-            totalBonusPoints += rental.getMovieBonusPoints(movies);
-        }
-        return totalBonusPoints;
-    }
-
     var customer = new Customer(customerInfo);
 
     var result = `Rental Record for ${customer.name}\n`;
@@ -97,10 +97,10 @@ function statement(customerInfo, movies) {
         result += `\t${movie.title}\t${amount}\n`;
     }
 
-    var totalAmount = getTotalAmount();
+    var totalAmount = customer.getTotalAmount(movies);
     result += `Amount owed is ${totalAmount}\n`;
 
-    var totalBonusPoints = getTotalBonusPoints();
+    var totalBonusPoints = customer.getTotalBonusPoints(movies);
     result += `You earned ${totalBonusPoints} frequent renter points\n`;
 
     return result;
