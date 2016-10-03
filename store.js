@@ -1,8 +1,9 @@
 "use strict";
 
 class Customer {
-    constructor(info) {
+    constructor(info, movies) {
         this._info = info;
+        this._movies = movies;
     }
 
     get name() {
@@ -10,29 +11,30 @@ class Customer {
     }
 
     get rentals() {
-        return this._info.rentals.map(r => new Rental(r));
+        return this._info.rentals.map(r => new Rental(r, this._movies));
     }
 
-    getTotalAmount(movies) {
+    getTotalAmount() {
         var totalAmount = 0;
         for (var rental of this.rentals) {
-            totalAmount += rental.getAmount(movies);
+            totalAmount += rental.getAmount();
         }
         return totalAmount;
     }
 
-    getTotalBonusPoints(movies) {
+    getTotalBonusPoints() {
         var totalBonusPoints = 0;
         for (var rental of this.rentals) {
-            totalBonusPoints += rental.getMovieBonusPoints(movies);
+            totalBonusPoints += rental.getMovieBonusPoints();
         }
         return totalBonusPoints;
     }
 }
 
 class Rental {
-    constructor(info) {
+    constructor(info, movies) {
         this._info = info;
+        this._movies = movies;
     }
 
     get movieID() {
@@ -43,12 +45,12 @@ class Rental {
         return this._info.days;
     }
 
-    getMovie(movies) {
-        return movies[this.movieID];
+    getMovie() {
+        return this._movies[this.movieID];
     }
 
-    getAmount(movies) {
-        var movie = this.getMovie(movies);
+    getAmount() {
+        var movie = this.getMovie();
 
         var amount = 0;
 
@@ -73,8 +75,8 @@ class Rental {
         return amount;
     }
 
-    getMovieBonusPoints(movies) {
-        let movie = this.getMovie(movies);
+    getMovieBonusPoints() {
+        let movie = this.getMovie();
 
         if (movie.code === "new" && this.days > 2)
             return 2;
@@ -86,21 +88,21 @@ class Rental {
 
 function statement(customerInfo, movies) {
 
-    var customer = new Customer(customerInfo);
+    var customer = new Customer(customerInfo, movies);
 
     var result = `Rental Record for ${customer.name}\n`;
 
     for (var rental of customer.rentals) {
-        var movie = rental.getMovie(movies);
-        var amount = rental.getAmount(movies);
+        var movie = rental.getMovie();
+        var amount = rental.getAmount();
 
         result += `\t${movie.title}\t${amount}\n`;
     }
 
-    var totalAmount = customer.getTotalAmount(movies);
+    var totalAmount = customer.getTotalAmount();
     result += `Amount owed is ${totalAmount}\n`;
 
-    var totalBonusPoints = customer.getTotalBonusPoints(movies);
+    var totalBonusPoints = customer.getTotalBonusPoints();
     result += `You earned ${totalBonusPoints} frequent renter points\n`;
 
     return result;
