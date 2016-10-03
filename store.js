@@ -26,53 +26,54 @@ class Rental {
     get days() {
         return this._info.days;
     }
-}
 
-function statement(customerInfo, movies) {
-
-    function getMovie(rental) {
-        return movies[rental.movieID];
+    getMovie(movies) {
+        return movies[this.movieID];
     }
 
-    function getAmount(rental) {
-        let movie = getMovie(rental);
+    getAmount(movies) {
+        var movie = this.getMovie(movies);
 
-        let amount = 0;
+        var amount = 0;
 
         // determine amount for each movie
         switch (movie.code) {
             case "regular":
                 amount = 2;
-                if (rental.days > 2) {
-                    amount += (rental.days - 2) * 1.5;
+                if (this.days > 2) {
+                    amount += (this.days - 2) * 1.5;
                 }
                 break;
             case "new":
-                amount = rental.days * 3;
+                amount = this.days * 3;
                 break;
             case "childrens":
                 amount = 1.5;
-                if (rental.days > 3) {
-                    amount += (rental.days - 3) * 1.5;
+                if (this.days > 3) {
+                    amount += (this.days - 3) * 1.5;
                 }
                 break;
         }
         return amount;
     }
 
-    function getMovieBonusPoints(rental) {
-        let movie = getMovie(rental);
+    getMovieBonusPoints(movies) {
+        let movie = this.getMovie(movies);
 
-        if (movie.code === "new" && rental.days > 2)
+        if (movie.code === "new" && this.days > 2)
             return 2;
         else
             return 1;
     }
 
+}
+
+function statement(customerInfo, movies) {
+
     function getTotalAmount() {
         let totalAmount = 0;
         for (let rental of customer.rentals) {
-            totalAmount += getAmount(rental);
+            totalAmount += rental.getAmount(movies);
         }
         return totalAmount;
     }
@@ -80,7 +81,7 @@ function statement(customerInfo, movies) {
     function getTotalBonusPoints() {
         let totalBonusPoints = 0;
         for (let rental of customer.rentals) {
-            totalBonusPoints += getMovieBonusPoints(rental);
+            totalBonusPoints += rental.getMovieBonusPoints(movies);
         }
         return totalBonusPoints;
     }
@@ -89,9 +90,9 @@ function statement(customerInfo, movies) {
 
     var result = `Rental Record for ${customer.name}\n`;
 
-    for (let rental of customer.rentals) {
-        let movie = getMovie(rental);
-        var amount = getAmount(rental);
+    for (var rental of customer.rentals) {
+        var movie = rental.getMovie(movies);
+        var amount = rental.getAmount(movies);
 
         result += `\t${movie.title}\t${amount}\n`;
     }
