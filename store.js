@@ -86,6 +86,21 @@ function statement(customer) {
     return result;
 }
 
+function htmlStatement(customer) {
+    var result = `<h1>Rental Record for ${customer.name}</h1>\n`;
+
+    result += `<table>\n`;
+    for (var rental of customer.rentals) {
+        result += `<tr><td>${rental.movie.title}</td><td>${rental.amount}</td></tr>\n`;
+    }
+    result += `</table>\n`;
+
+    result += `<p>Amount owed is <b>${customer.totalAmount}</b></p>\n`;
+    result += `<p>You earned <b>${customer.totalBonusPoints}</b> frequent renter points</p>\n`;
+
+    return result;
+}
+
 var customerInfo = {
     name: "martin",
     rentals: [{
@@ -111,4 +126,5 @@ var movies = {
 
 var customer = new Customer(customerInfo, movies);
 
-console.log(statement(customer));
+//console.log(statement(customer));
+console.log(htmlStatement(customer));
