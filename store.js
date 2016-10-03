@@ -1,6 +1,20 @@
 "use strict";
 
-function statement(customer, movies) {
+class Customer {
+    constructor(info) {
+        this._info = info;
+    }
+
+    get name() {
+        return this._info.name;
+    }
+
+    get rentals() {
+        return this._info.rentals;
+    }
+}
+
+function statement(customerInfo, movies) {
 
     function getMovie(rental) {
         return movies[rental.movieID];
@@ -57,7 +71,9 @@ function statement(customer, movies) {
         return totalBonusPoints;
     }
 
-    let result = `Rental Record for ${customer.name}\n`;
+    var customer = new Customer(customerInfo);
+
+    var result = `Rental Record for ${customer.name}\n`;
 
     for (let rental of customer.rentals) {
         let movie = getMovie(rental);
