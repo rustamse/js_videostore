@@ -14,20 +14,12 @@ class Customer {
         return this._info.rentals.map(r => new Rental(r, this._movies));
     }
 
-    getTotalAmount() {
-        var totalAmount = 0;
-        for (var rental of this.rentals) {
-            totalAmount += rental.amount;
-        }
-        return totalAmount;
+    get totalAmount() {
+        return this.rentals.reduce((totalAmount, rental) => totalAmount + rental.amount, 0);
     }
 
-    getTotalBonusPoints() {
-        var totalBonusPoints = 0;
-        for (var rental of this.rentals) {
-            totalBonusPoints += rental.getMovieBonusPoints();
-        }
-        return totalBonusPoints;
+    get totalBonusPoints() {
+        return this.rentals.reduce((totalBonusPoints, rental) => totalBonusPoints + rental.bonusPoints, 0);
     }
 }
 
@@ -73,35 +65,28 @@ class Rental {
         return amount;
     }
 
-    getMovieBonusPoints() {
+    get bonusPoints() {
         if (this.movie.code === "new" && this.days > 2)
             return 2;
         else
             return 1;
     }
-
 }
 
-function statement(customerInfo, movies) {
-
-    var customer = new Customer(customerInfo, movies);
-
+function statement(customer) {
     var result = `Rental Record for ${customer.name}\n`;
 
     for (var rental of customer.rentals) {
         result += `\t${rental.movie.title}\t${rental.amount}\n`;
     }
 
-    var totalAmount = customer.getTotalAmount();
-    result += `Amount owed is ${totalAmount}\n`;
-
-    var totalBonusPoints = customer.getTotalBonusPoints();
-    result += `You earned ${totalBonusPoints} frequent renter points\n`;
+    result += `Amount owed is ${customer.totalAmount}\n`;
+    result += `You earned ${customer.totalBonusPoints} frequent renter points\n`;
 
     return result;
 }
 
-let customer = {
+var customerInfo = {
     name: "martin",
     rentals: [{
         "movieID": "F001",
@@ -112,7 +97,7 @@ let customer = {
     },]
 };
 
-let movies = {
+var movies = {
     "F001": {
         "title": "Ran",
         "code": "regular"
@@ -124,4 +109,6 @@ let movies = {
     // etc
 };
 
-console.log(statement(customer, movies));
+var customer = new Customer(customerInfo, movies);
+
+console.log(statement(customer));
